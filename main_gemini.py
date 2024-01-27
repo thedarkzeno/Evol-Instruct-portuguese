@@ -4,16 +4,22 @@ import random
 from gemini_access import call_gemini
 from depth import createConstraintsPrompt, createDeepenPrompt, createConcretizingPrompt, createReasoningPrompt
 from breadth import createBreadthPrompt
+from tqdm.auto import tqdm
+
+with open('cabrita-dataset-52k.json','r', encoding="utf-8") as file:
+
+	all_objs = json.load(file)
+
+try:
+	with open('alpaca_data_evol.json','r', encoding="utf-8") as file:
+
+		evol_objs = json.load(file)
+except:
+    evol_objs = []
 
 
-fr = open('alpaca_data.json','r')
-
-all_objs = json.load(fr)
-
-evol_objs = []
-
-
-for cur_obj in all_objs:
+i=0
+for cur_obj in tqdm(all_objs[len(evol_objs):]):
 	
 	instruction = cur_obj['instruction'].strip() + '\r\n'+ cur_obj['input'].strip()
 
@@ -36,8 +42,10 @@ for cur_obj in all_objs:
 	answer = call_gemini(evol_instruction)
 
 	evol_objs.append({"instruction":evol_instruction,"output":answer})
+	if i>0 and i%10 == 0:
+		with open('alpaca_data_evol.json', 'w') as f:	
+			json.dump(evol_objs, f, indent=4)
+	i+=1
 
-
-
-with open('alpaca_data_evol.json', 'w') as f:	
+with open('alpaca_data_evol.json', 'w', encoding="utf-8") as f:	
 	json.dump(evol_objs, f, indent=4)
