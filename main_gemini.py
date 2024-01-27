@@ -17,15 +17,20 @@ for cur_obj in all_objs:
 	
 	instruction = cur_obj['instruction'].strip() + '\r\n'+ cur_obj['input'].strip()
 
-	evol_prompts = []
-	evol_prompts.append(createConstraintsPrompt(instruction))
-	evol_prompts.append(createDeepenPrompt(instruction))
-	evol_prompts.append(createConcretizingPrompt(instruction))
-	evol_prompts.append(createReasoningPrompt(instruction))
-	evol_prompts.append(createBreadthPrompt(instruction))
-
-	selected_evol_prompt = random.choice(evol_prompts)
-
+	strategy = random.randint(0, 4)
+	
+	if strategy == 0:
+		selected_evol_prompt = createConstraintsPrompt(instruction)
+	elif strategy == 1:
+		selected_evol_prompt = createDeepenPrompt(instruction)
+	elif strategy == 2:
+		selected_evol_prompt = createConcretizingPrompt(instruction)
+	elif strategy == 3:
+		selected_evol_prompt = createReasoningPrompt(instruction)
+	else:
+		selected_evol_prompt = createBreadthPrompt(instruction)
+	
+	
 
 	evol_instruction = call_gemini(selected_evol_prompt)
 	answer = call_gemini(evol_instruction)
