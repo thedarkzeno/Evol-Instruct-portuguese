@@ -7,17 +7,12 @@ genai.configure(api_key=api_key)
 
 def get_gemini_completion(prompt):
 
-    try: 
         response = model.generate_content(prompt)
       
         res = " ".join([part.text for part in (response.parts)])
        
         gpt_output = res
         return gpt_output
-    except requests.exceptions.Timeout:
-        # Handle the timeout error here
-        print("The Gemini API request timed out. Please try again later.")
-        return None
 
 def call_gemini(ins):
     success = False
