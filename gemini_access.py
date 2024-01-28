@@ -4,6 +4,7 @@ import time
 
 api_key = 'your api key'
 genai.configure(api_key=api_key)
+model = genai.GenerativeModel('gemini-pro')
 
 def get_gemini_completion(prompt):
 
